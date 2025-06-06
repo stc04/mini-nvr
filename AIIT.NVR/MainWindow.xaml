@@ -22,9 +22,12 @@
             
             <!-- Logo and Title -->
             <StackPanel Grid.Column="0" Orientation="Horizontal" Margin="15,10">
-                <Border Width="40" Height="40" CornerRadius="20" Background="#007ACC">
-                    <TextBlock Text="AI-IT" FontSize="12" FontWeight="Bold" Foreground="White" 
-                               HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <Border Width="40" Height="40" CornerRadius="20" Background="Transparent">
+                    <Image Source="/assets/images/aiit-logo.jpg" 
+                           Width="40" Height="40" 
+                           Stretch="Uniform"
+                           HorizontalAlignment="Center" 
+                           VerticalAlignment="Center"/>
                 </Border>
                 <TextBlock Text="AI-IT Inc NVR" FontSize="18" FontWeight="Bold" Foreground="White" 
                            VerticalAlignment="Center" Margin="10,0,0,0"/>

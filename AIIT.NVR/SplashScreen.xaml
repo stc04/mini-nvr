@@ -31,9 +31,12 @@
                     </Grid.ColumnDefinitions>
                     
                     <!-- Logo -->
-                    <Border Grid.Column="0" Width="80" Height="80" CornerRadius="40" Background="#007ACC">
-                        <TextBlock Text="AI-IT" FontSize="24" FontWeight="Bold" Foreground="White" 
-                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <Border Grid.Column="0" Width="80" Height="80" CornerRadius="40" Background="Transparent" Margin="0,0,20,0">
+                        <Image Source="/assets/images/aiit-logo.jpg" 
+                               Width="80" Height="80" 
+                               Stretch="Uniform"
+                               HorizontalAlignment="Center" 
+                               VerticalAlignment="Center"/>
                     </Border>
                     
                     <!-- Title -->
@@ -122,8 +125,12 @@
                     <Grid>
                         <Grid x:Name="LoadingGrid" Visibility="Collapsed">
                             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                                <Border Width="80" Height="80" CornerRadius="40" Background="#007ACC" Margin="0,0,0,15">
-                                    <TextBlock Text="🔄" FontSize="36" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                <Border Width="80" Height="80" CornerRadius="40" Background="Transparent" Margin="0,0,0,15">
+                                    <Image Source="/assets/images/aiit-logo.jpg" 
+                                           Width="80" Height="80" 
+                                           Stretch="Uniform"
+                                           HorizontalAlignment="Center" 
+                                           VerticalAlignment="Center"/>
                                 </Border>
                                 <TextBlock Text="Scanning Your Network..." FontSize="18" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center"/>
                                 <ProgressBar IsIndeterminate="True" Height="6" Margin="0,15,0,0" Width="250" Background="#333333"/>
