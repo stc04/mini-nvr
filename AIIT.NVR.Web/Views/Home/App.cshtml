@@ -1,0 +1,653 @@
+@{
+    ViewData["Title"] = "AI-IT Inc NVR - Security Management System";
+    Layout = "~/Views/Shared/_AppLayout.cshtml";
+}
+
+<div id="app-container" class="h-100">
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="loading-content">
+            <div class="logo-container">
+                <img src="/images/aiit-logo.png" alt="AI-IT Inc" class="loading-logo">
+                <div class="loading-spinner"></div>
+            </div>
+            <h2 class="loading-title">AI-IT Inc NVR</h2>
+            <p class="loading-subtitle">Initializing Security System...</p>
+            <div class="progress-container">
+                <div class="progress-bar" id="loading-progress"></div>
+            </div>
+            <div class="loading-status" id="loading-status">Connecting to system...</div>
+        </div>
+    </div>
+
+    <!-- Main Application -->
+    <div id="main-app" class="main-app d-none">
+        <!-- Top Navigation -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+            <div class="container-fluid">
+                <a class="navbar-brand d-flex align-items-center" href="#">
+                    <img src="/images/aiit-logo.png" alt="AI-IT Inc" height="32" class="me-2">
+                    <span class="fw-bold">AI-IT Inc NVR</span>
+                </a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#" data-section="dashboard">
+                                <i class="fas fa-tachometer-alt me-1"></i>Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" data-section="live">
+                                <i class="fas fa-video me-1"></i>Live View
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" data-section="recordings">
+                                <i class="fas fa-play-circle me-1"></i>Recordings
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" data-section="events">
+                                <i class="fas fa-bell me-1"></i>Events
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" data-section="settings">
+                                <i class="fas fa-cog me-1"></i>Settings
+                            </a>
+                        </li>
+                    </ul>
+
+                    <!-- System Status -->
+                    <ul class="navbar-nav">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="systemStatus" role="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-circle text-success me-1" id="status-indicator"></i>
+                                <span id="connection-status">Online</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><h6 class="dropdown-header">System Status</h6></li>
+                                <li><span class="dropdown-item-text">
+                                    <small>Cameras: <span id="nav-camera-count">@ViewBag.OnlineCameras/@ViewBag.TotalCameras</span></small>
+                                </span></li>
+                                <li><span class="dropdown-item-text">
+                                    <small>CPU: <span id="nav-cpu-usage">--</span></small>
+                                </span></li>
+                                <li><span class="dropdown-item-text">
+                                    <small>Memory: <span id="nav-memory-usage">--</span></small>
+                                </span></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="#" onclick="showSystemInfo()">
+                                    <i class="fas fa-info-circle me-2"></i>System Info
+                                </a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" onclick="toggleFullscreen()">
+                                <i class="fas fa-expand" id="fullscreen-icon"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Dashboard Section -->
+            <section id="dashboard-section" class="content-section active">
+                <div class="container-fluid">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h1 class="h3 mb-0 text-gray-800">
+                            <i class="fas fa-tachometer-alt me-2"></i>Security Dashboard
+                        </h1>
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-success btn-sm" onclick="armSystem()">
+                                <i class="fas fa-shield-alt me-1"></i>Arm System
+                            </button>
+                            <button type="button" class="btn btn-warning btn-sm" onclick="disarmSystem()">
+                                <i class="fas fa-shield-alt me-1"></i>Disarm System
+                            </button>
+                            <button type="button" class="btn btn-info btn-sm" onclick="refreshAll()">
+                                <i class="fas fa-sync me-1"></i>Refresh
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Dashboard Content -->
+                    <div id="dashboard-content">
+                        @await Html.PartialAsync("~/Views/WebViewer/Index.cshtml")
+                    </div>
+                </div>
+            </section>
+
+            <!-- Live View Section -->
+            <section id="live-section" class="content-section">
+                <div class="container-fluid">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h1 class="h3 mb-0 text-gray-800">
+                            <i class="fas fa-video me-2"></i>Live Camera View
+                        </h1>
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-outline-primary btn-sm" onclick="setLayout(1)">1x1</button>
+                            <button type="button" class="btn btn-outline-primary btn-sm" onclick="setLayout(4)">2x2</button>
+                            <button type="button" class="btn btn-outline-primary btn-sm" onclick="setLayout(9)">3x3</button>
+                            <button type="button" class="btn btn-outline-primary btn-sm" onclick="setLayout(16)">4x4</button>
+                        </div>
+                    </div>
+
+                    <div id="live-camera-grid" class="camera-grid">
+                        <!-- Live camera feeds will be loaded here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Recordings Section -->
+            <section id="recordings-section" class="content-section">
+                <div class="container-fluid">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h1 class="h3 mb-0 text-gray-800">
+                            <i class="fas fa-play-circle me-2"></i>Recordings
+                        </h1>
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-outline-primary btn-sm" onclick="filterRecordings('today')">Today</button>
+                            <button type="button" class="btn btn-outline-primary btn-sm" onclick="filterRecordings('week')">This Week</button>
+                            <button type="button" class="btn btn-outline-primary btn-sm" onclick="filterRecordings('month')">This Month</button>
+                        </div>
+                    </div>
+
+                    <div id="recordings-content">
+                        <!-- Recordings will be loaded here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Events Section -->
+            <section id="events-section" class="content-section">
+                <div class="container-fluid">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h1 class="h3 mb-0 text-gray-800">
+                            <i class="fas fa-bell me-2"></i>Security Events
+                        </h1>
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-outline-primary btn-sm" onclick="filterEvents('motion')">Motion</button>
+                            <button type="button" class="btn btn-outline-primary btn-sm" onclick="filterEvents('alerts')">Alerts</button>
+                            <button type="button" class="btn btn-outline-primary btn-sm" onclick="filterEvents('system')">System</button>
+                        </div>
+                    </div>
+
+                    <div id="events-content">
+                        <!-- Events will be loaded here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Settings Section -->
+            <section id="settings-section" class="content-section">
+                <div class="container-fluid">
+                    <h1 class="h3 mb-4 text-gray-800">
+                        <i class="fas fa-cog me-2"></i>System Settings
+                    </h1>
+
+                    <div id="settings-content">
+                        <!-- Settings will be loaded here -->
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Notification Container -->
+        <div id="notification-container" class="notification-container"></div>
+
+        <!-- Modal Container -->
+        <div id="modal-container"></div>
+    </div>
+</div>
+
+<!-- App Styles -->
+<style>
+.loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.loading-content {
+    text-align: center;
+    color: white;
+}
+
+.logo-container {
+    position: relative;
+    margin-bottom: 2rem;
+}
+
+.loading-logo {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    box-shadow: 0 0 30px rgba(0, 255, 136, 0.3);
+}
+
+.loading-spinner {
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    width: 140px;
+    height: 140px;
+    border: 3px solid transparent;
+    border-top: 3px solid #00ff88;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loading-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(45deg, #00ff88, #007acc);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.loading-subtitle {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+    opacity: 0.8;
+}
+
+.progress-container {
+    width: 300px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+    margin: 0 auto 1rem;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #00ff88, #007acc);
+    border-radius: 2px;
+    width: 0%;
+    transition: width 0.3s ease;
+}
+
+.loading-status {
+    font-size: 0.9rem;
+    opacity: 0.7;
+}
+
+.main-app {
+    height: 100vh;
+    overflow: hidden;
+}
+
+.main-content {
+    margin-top: 56px;
+    height: calc(100vh - 56px);
+    overflow-y: auto;
+    padding: 2rem;
+    background: #f8f9fa;
+}
+
+.content-section {
+    display: none;
+}
+
+.content-section.active {
+    display: block;
+}
+
+.camera-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.camera-grid.layout-1 {
+    grid-template-columns: 1fr;
+}
+
+.camera-grid.layout-4 {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.camera-grid.layout-9 {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.camera-grid.layout-16 {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.notification-container {
+    position: fixed;
+    top: 70px;
+    right: 20px;
+    z-index: 1050;
+    max-width: 400px;
+}
+
+.navbar-brand img {
+    filter: brightness(1.2);
+}
+
+#status-indicator.text-success {
+    color: #00ff88 !important;
+}
+
+#status-indicator.text-warning {
+    color: #ffc107 !important;
+}
+
+#status-indicator.text-danger {
+    color: #dc3545 !important;
+}
+
+@media (max-width: 768px) {
+    .main-content {
+        padding: 1rem;
+    }
+    
+    .camera-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .notification-container {
+        left: 20px;
+        right: 20px;
+        max-width: none;
+    }
+}
+</style>
+
+<!-- App JavaScript -->
+<script>
+class AIITNVRApp {
+    constructor() {
+        this.currentSection = 'dashboard';
+        this.isLoading = true;
+        this.signalRConnection = null;
+        this.init();
+    }
+
+    async init() {
+        await this.showLoadingScreen();
+        await this.initializeSignalR();
+        await this.loadInitialData();
+        this.setupEventListeners();
+        await this.hideLoadingScreen();
+    }
+
+    async showLoadingScreen() {
+        const steps = [
+            'Initializing system...',
+            'Connecting to cameras...',
+            'Loading configuration...',
+            'Establishing secure connection...',
+            'Synchronizing data...',
+            'Ready!'
+        ];
+
+        for (let i = 0; i < steps.length; i++) {
+            document.getElementById('loading-status').textContent = steps[i];
+            document.getElementById('loading-progress').style.width = `${(i + 1) * 16.67}%`;
+            await new Promise(resolve => setTimeout(resolve, 500));
+        }
+    }
+
+    async hideLoadingScreen() {
+        document.getElementById('loading-screen').style.opacity = '0';
+        setTimeout(() => {
+            document.getElementById('loading-screen').style.display = 'none';
+            document.getElementById('main-app').classList.remove('d-none');
+        }, 500);
+    }
+
+    async initializeSignalR() {
+        try {
+            this.signalRConnection = new signalR.HubConnectionBuilder()
+                .withUrl("/nvrhub")
+                .withAutomaticReconnect()
+                .build();
+
+            this.signalRConnection.on("CameraStatusUpdate", (data) => {
+                this.handleCameraStatusUpdate(data);
+            });
+
+            this.signalRConnection.on("SystemStatusUpdate", (data) => {
+                this.handleSystemStatusUpdate(data);
+            });
+
+            this.signalRConnection.on("MotionDetected", (data) => {
+                this.handleMotionDetection(data);
+            });
+
+            await this.signalRConnection.start();
+            console.log("SignalR Connected");
+        } catch (err) {
+            console.error("SignalR Connection Error: ", err);
+        }
+    }
+
+    async loadInitialData() {
+        try {
+            // Load cameras
+            const camerasResponse = await fetch('/WebViewer/GetCameras');
+            const cameras = await camerasResponse.json();
+            
+            // Load system status
+            const statusResponse = await fetch('/WebViewer/GetSystemStatus');
+            const status = await statusResponse.json();
+            
+            this.updateUI(cameras, status);
+        } catch (error) {
+            console.error('Error loading initial data:', error);
+        }
+    }
+
+    setupEventListeners() {
+        // Navigation
+        document.querySelectorAll('[data-section]').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.showSection(e.target.dataset.section);
+            });
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey) {
+                switch (e.key) {
+                    case '1': this.showSection('dashboard'); break;
+                    case '2': this.showSection('live'); break;
+                    case '3': this.showSection('recordings'); break;
+                    case '4': this.showSection('events'); break;
+                    case '5': this.showSection('settings'); break;
+                }
+            }
+        });
+    }
+
+    showSection(sectionName) {
+        // Update navigation
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.classList.remove('active');
+        });
+        document.querySelector(`[data-section="${sectionName}"]`).classList.add('active');
+
+        // Update content
+        document.querySelectorAll('.content-section').forEach(section => {
+            section.classList.remove('active');
+        });
+        document.getElementById(`${sectionName}-section`).classList.add('active');
+
+        this.currentSection = sectionName;
+        this.loadSectionContent(sectionName);
+    }
+
+    async loadSectionContent(sectionName) {
+        switch (sectionName) {
+            case 'live':
+                await this.loadLiveCameras();
+                break;
+            case 'recordings':
+                await this.loadRecordings();
+                break;
+            case 'events':
+                await this.loadEvents();
+                break;
+            case 'settings':
+                await this.loadSettings();
+                break;
+        }
+    }
+
+    async loadLiveCameras() {
+        const grid = document.getElementById('live-camera-grid');
+        grid.innerHTML = '<div class="text-center"><div class="spinner-border"></div><p>Loading cameras...</p></div>';
+        
+        try {
+            const response = await fetch('/WebViewer/GetCameras');
+            const cameras = await response.json();
+            
+            grid.innerHTML = '';
+            cameras.forEach(camera => {
+                const cameraElement = this.createCameraElement(camera);
+                grid.appendChild(cameraElement);
+            });
+        } catch (error) {
+            grid.innerHTML = '<div class="alert alert-danger">Error loading cameras</div>';
+        }
+    }
+
+    createCameraElement(camera) {
+        const div = document.createElement('div');
+        div.className = 'camera-item';
+        div.innerHTML = `
+            <div class="card">
+                <div class="camera-video-container" style="height: 250px; background: #000;">
+                    <div class="d-flex align-items-center justify-content-center h-100 text-white">
+                        <div class="text-center">
+                            <i class="fas fa-video fa-3x mb-2"></i>
+                            <div>${camera.name}</div>
+                            <div class="badge ${camera.status === 'Online' ? 'bg-success' : 'bg-danger'} mt-2">
+                                ${camera.status}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <h6 class="card-title">${camera.name}</h6>
+                    <p class="card-text small text-muted">${camera.location || 'Unknown Location'}</p>
+                    <div class="btn-group w-100">
+                        <button class="btn btn-sm btn-outline-primary" onclick="app.viewCameraFullscreen(${camera.id})">
+                            <i class="fas fa-expand"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-secondary" onclick="app.captureSnapshot(${camera.id})">
+                            <i class="fas fa-camera"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-${camera.isRecording ? 'danger' : 'success'}" 
+                                onclick="app.toggleRecording(${camera.id})">
+                            <i class="fas ${camera.isRecording ? 'fa-stop' : 'fa-play'}"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+        return div;
+    }
+
+    handleCameraStatusUpdate(data) {
+        // Update camera status in UI
+        console.log('Camera status update:', data);
+    }
+
+    handleSystemStatusUpdate(data) {
+        // Update system status indicators
+        document.getElementById('nav-cpu-usage').textContent = `${data.cpuUsage}%`;
+        document.getElementById('nav-memory-usage').textContent = `${data.memoryUsage}%`;
+    }
+
+    handleMotionDetection(data) {
+        this.showNotification(`Motion detected on ${data.cameraName}`, 'warning');
+    }
+
+    showNotification(message, type = 'info') {
+        const container = document.getElementById('notification-container');
+        const notification = document.createElement('div');
+        notification.className = `alert alert-${type} alert-dismissible fade show`;
+        notification.innerHTML = `
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        `;
+        container.appendChild(notification);
+
+        setTimeout(() => {
+            notification.remove();
+        }, 5000);
+    }
+
+    updateUI(cameras, status) {
+        // Update navigation status
+        document.getElementById('nav-camera-count').textContent = 
+            `${status.onlineCameras}/${status.totalCameras}`;
+    }
+}
+
+// Global functions
+function setLayout(count) {
+    const grid = document.getElementById('live-camera-grid');
+    grid.className = `camera-grid layout-${count}`;
+}
+
+function armSystem() {
+    app.showNotification('System armed successfully', 'success');
+}
+
+function disarmSystem() {
+    app.showNotification('System disarmed successfully', 'warning');
+}
+
+function refreshAll() {
+    app.loadInitialData();
+    app.showNotification('System refreshed', 'info');
+}
+
+function toggleFullscreen() {
+    if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+        document.getElementById('fullscreen-icon').className = 'fas fa-compress';
+    } else {
+        document.exitFullscreen();
+        document.getElementById('fullscreen-icon').className = 'fas fa-expand';
+    }
+}
+
+// Initialize app
+let app;
+document.addEventListener('DOMContentLoaded', () => {
+    app = new AIITNVRApp();
+});
+</script>
+
+<!-- SignalR Client Library -->
+<script src="https://unpkg.com/@@microsoft/signalr@latest/dist/browser/signalr.min.js"></script>

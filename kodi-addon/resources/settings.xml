@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<settings version="1">
+    <category id="connection" label="30001">
+        <group id="1" label="30010">
+            <setting id="nvr_host" type="string" label="30011" default="localhost" help="30111">
+                <level>0</level>
+                <default>localhost</default>
+            </setting>
+            <setting id="nvr_port" type="string" label="30012" default="8080" help="30112">
+                <level>0</level>
+                <default>8080</default>
+            </setting>
+            <setting id="use_https" type="boolean" label="30013" default="false" help="30113">
+                <level>0</level>
+                <default>false</default>
+            </setting>
+        </group>
+        <group id="2" label="30020">
+            <setting id="nvr_username" type="string" label="30021" default="admin" help="30121">
+                <level>0</level>
+                <default>admin</default>
+            </setting>
+            <setting id="nvr_password" type="string" label="30022" default="" option="hidden" help="30122">
+                <level>0</level>
+                <default></default>
+            </setting>
+        </group>
+    </category>
+    
+    <category id="streaming" label="30002">
+        <group id="3" label="30030">
+            <setting id="stream_quality" type="select" label="30031" default="medium" help="30131">
+                <level>0</level>
+                <default>medium</default>
+                <constraints>
+                    <options>
+                        <option label="30041">low</option>
+                        <option label="30042">medium</option>
+                        <option label="30043">high</option>
+                        <option label="30044">ultra</option>
+                    </options>
+                </constraints>
+            </setting>
+            <setting id="grid_quality" type="select" label="30032" default="low" help="30132">
+                <level>0</level>
+                <default>low</default>
+                <constraints>
+                    <options>
+                        <option label="30041">low</option>
+                        <option label="30042">medium</option>
+                        <option label="30043">high</option>
+                    </options>
+                </constraints>
+            </setting>
+            <setting id="buffer_size" type="slider" label="30033" default="20" help="30133">
+                <level>1</level>
+                <default>20</default>
+                <constraints>
+                    <minimum>5</minimum>
+                    <step>5</step>
+                    <maximum>100</maximum>
+                </constraints>
+            </setting>
+            <setting id="enable_audio" type="boolean" label="30034" default="true" help="30134">
+                <level>0</level>
+                <default>true</default>
+            </setting>
+        </group>
+    </category>
+    
+    <category id="interface" label="30003">
+        <group id="4" label="30040">
+            <setting id="show_notifications" type="boolean" label="30051" default="true" help="30151">
+                <level>0</level>
+                <default>true</default>
+            </setting>
+            <setting id="notification_duration" type="slider" label="30052" default="5" help="30152">
+                <level>1</level>
+                <default>5</default>
+                <constraints>
+                    <minimum>1</minimum>
+                    <step>1</step>
+                    <maximum>15</maximum>
+                </constraints>
+            </setting>
+            <setting id="auto_refresh" type="slider" label="30053" default="30" help="30153">
+                <level>1</level>
+                <default>30</default>
+                <constraints>
+                    <minimum>10</minimum>
+                    <step>5</step>
+                    <maximum>300</maximum>
+                </constraints>
+            </setting>
+        </group>
+    </category>
+    
+    <category id="advanced" label="30004">
+        <group id="5" label="30050">
+            <setting id="debug_logging" type="boolean" label="30061" default="false" help="30161">
+                <level>2</level>
+                <default>false</default>
+            </setting>
+            <setting id="connection_timeout" type="slider" label="30062" default="10" help="30162">
+                <level>2</level>
+                <default>10</default>
+                <constraints>
+                    <minimum>5</minimum>
+                    <step>1</step>
+                    <maximum>60</maximum>
+                </constraints>
+            </setting>
+            <setting id="max_retries" type="slider" label="30063" default="3" help="30163">
+                <level>2</level>
+                <default>3</default>
+                <constraints>
+                    <minimum>1</minimum>
+                    <step>1</step>
+                    <maximum>10</maximum>
+                </constraints>
+            </setting>
+        </group>
+    </category>
+</settings>

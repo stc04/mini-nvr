@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI-IT Inc NVR System - Professional Network Video Recorder</title>
+    <link rel="icon" type="image/jpeg" href="/assets/images/aiit-logo.jpg">
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #00ff88;
+            --secondary-color: #1a1a1a;
+            --accent-color: #007acc;
+            --text-light: #ffffff;
+            --text-dark: #333333;
+            --gradient-bg: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--gradient-bg);
+            color: var(--text-light);
+            overflow-x: hidden;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%);
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="%23333" stroke-width="0.5" opacity="0.3"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .logo-container {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            box-shadow: 0 20px 40px rgba(0, 255, 136, 0.3);
+            animation: pulse 2s infinite;
+        }
+
+        .logo-container img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 20px 40px rgba(0, 255, 136, 0.3); }
+            50% { box-shadow: 0 25px 50px rgba(0, 255, 136, 0.5); }
+            100% { box-shadow: 0 20px 40px rgba(0, 255, 136, 0.3); }
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            font-weight: 300;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .hero-description {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 3rem;
+            opacity: 0.8;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn-primary-custom {
+            background: linear-gradient(45deg, var(--primary-color), #00cc6a);
+            border: none;
+            color: var(--secondary-color);
+            font-weight: 600;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.4);
+            color: var(--secondary-color);
+        }
+
+        .btn-secondary-custom {
+            background: transparent;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            font-weight: 600;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-secondary-custom:hover {
+            background: var(--primary-color);
+            color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        /* Features Section */
+        .features-section {
+            padding: 5rem 0;
+            background: #0a0a0a;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 255, 136, 0.1);
+            height: 100%;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(0, 255, 136, 0.3);
+        }
+
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 2rem;
+            color: var(--secondary-color);
+        }
+
+        .feature-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-light);
+        }
+
+        .feature-description {
+            opacity: 0.8;
+            line-height: 1.6;
+        }
+
+        /* Stats Section */
+        .stats-section {
+            padding: 3rem 0;
+            background: var(--secondary-color);
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1rem;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 1.1rem;
+            opacity: 0.8;
+            margin-top: 0.5rem;
+        }
+
+        /* Demo Section */
+        .demo-section {
+            padding: 5rem 0;
+            background: #0f0f0f;
+        }
+
+        .demo-video {
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+            position: relative;
+        }
+
+        .demo-placeholder {
+            aspect-ratio: 16/9;
+            background: linear-gradient(45deg, #1a1a1a, #2d2d2d);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-light);
+            font-size: 1.2rem;
+        }
+
+        /* System Requirements */
+        .requirements-section {
+            padding: 4rem 0;
+            background: var(--secondary-color);
+        }
+
+        .requirement-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .requirement-title {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Footer */
+        .footer {
+            background: #000000;
+            padding: 3rem 0 1rem;
+            border-top: 1px solid rgba(0, 255, 136, 0.1);
+        }
+
+        .footer-logo {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin-bottom: 1rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin: 2rem 0;
+        }
+
+        .social-link {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-light);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .social-link:hover {
+            background: var(--primary-color);
+            color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn-primary-custom,
+            .btn-secondary-custom {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+        }
+
+        /* Loading Animation */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--secondary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 3px solid rgba(0, 255, 136, 0.3);
+            border-top: 3px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Scroll Animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="text-center">
+            <div class="loading-spinner"></div>
+            <div class="mt-3">
+                <img src="/assets/images/aiit-logo.jpg" alt="AI-IT Inc" class="footer-logo">
+            </div>
+            <p class="mt-2">Initializing AI-IT Inc NVR System...</p>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <div class="hero-content text-center text-lg-start">
+                        <div class="logo-container d-lg-none">
+                            <img src="/assets/images/aiit-logo.jpg" alt="AI-IT Inc">
+                        </div>
+                        <h1 class="hero-title fade-in">AI-IT Inc NVR</h1>
+                        <p class="hero-subtitle fade-in">Professional Network Video Recorder</p>
+                        <p class="hero-description fade-in">
+                            Transform your security infrastructure with our cutting-edge NVR system. 
+                            Monitor up to 48 cameras, integrate with smart home platforms, and leverage 
+                            AI-powered analytics for comprehensive surveillance solutions.
+                        </p>
+                        <div class="cta-buttons fade-in">
+                            <a href="/WebViewer" class="btn-primary-custom">
+                                <i class="fas fa-play"></i>
+                                Launch NVR System
+                            </a>
+                            <a href="#features" class="btn-secondary-custom">
+                                <i class="fas fa-info-circle"></i>
+                                Learn More
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 d-none d-lg-block">
+                    <div class="text-center">
+                        <div class="logo-container">
+                            <img src="/assets/images/aiit-logo.jpg" alt="AI-IT Inc">
+                        </div>
+                        <div class="demo-video">
+                            <div class="demo-placeholder">
+                                <div class="text-center">
+                                    <i class="fas fa-video fa-4x mb-3"></i>
+                                    <h4>Live Demo</h4>
+                                    <p>Professional NVR Interface</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3 col-6">
+                    <div class="stat-item fade-in">
+                        <span class="stat-number" data-count="48">0</span>
+                        <div class="stat-label">Max Cameras</div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="stat-item fade-in">
+                        <span class="stat-number" data-count="99.9">0</span>
+                        <div class="stat-label">Uptime %</div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="stat-item fade-in">
+                        <span class="stat-number" data-count="24">0</span>
+                        <div class="stat-label">24/7 Monitoring</div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="stat-item fade-in">
+                        <span class="stat-number" data-count="4">0</span>
+                        <div class="stat-label">4K Resolution</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features-section" id="features">
+        <div class="container">
+            <div class="row mb-5">
+                <div class="col-12 text-center">
+                    <h2 class="display-4 mb-3 fade-in">Powerful Features</h2>
+                    <p class="lead opacity-75 fade-in">Everything you need for professional video surveillance</p>
+                </div>
+            </div>
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6">
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon">
+                            <i class="fas fa-video"></i>
+                        </div>
+                        <h3 class="feature-title">Multi-Camera Support</h3>
+                        <p class="feature-description">
+                            Monitor up to 48 IP cameras simultaneously with real-time streaming, 
+                            recording, and playback capabilities.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <h3 class="feature-title">AI Analytics</h3>
+                        <p class="feature-description">
+                            Advanced motion detection, object recognition, and behavioral 
+                            analysis powered by artificial intelligence.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon">
+                            <i class="fas fa-home"></i>
+                        </div>
+                        <h3 class="feature-title">Smart Home Integration</h3>
+                        <p class="feature-description">
+                            Seamlessly integrate with Alexa, Google Home, Apple HomeKit, 
+                            and other smart home platforms.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <h3 class="feature-title">Mobile Access</h3>
+                        <p class="feature-description">
+                            Access your cameras from anywhere with our mobile apps for 
+                            iOS and Android devices.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon">
+                            <i class="fas fa-cloud"></i>
+                        </div>
+                        <h3 class="feature-title">Cloud Storage</h3>
+                        <p class="feature-description">
+                            Secure cloud backup and storage options with encryption 
+                            and redundancy for critical recordings.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon">
+                            <i class="fas fa-tv"></i>
+                        </div>
+                        <h3 class="feature-title">Kodi Integration</h3>
+                        <p class="feature-description">
+                            View live feeds and recordings directly in Kodi media center 
+                            on any compatible device.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- System Requirements -->
+    <section class="requirements-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <h2 class="text-center mb-5 fade-in">System Requirements</h2>
+                    <div class="requirement-item fade-in">
+                        <div class="requirement-title">Operating System</div>
+                        <div>Windows 10/11, Linux (Ubuntu 20.04+), macOS 11+, Raspberry Pi OS</div>
+                    </div>
+                    <div class="requirement-item fade-in">
+                        <div class="requirement-title">Processor</div>
+                        <div>Intel i5-8400 / AMD Ryzen 5 3600 or better (i7/Ryzen 7 recommended)</div>
+                    </div>
+                    <div class="requirement-item fade-in">
+                        <div class="requirement-title">Memory</div>
+                        <div>8GB RAM minimum (16GB+ recommended for 16+ cameras)</div>
+                    </div>
+                    <div class="requirement-item fade-in">
+                        <div class="requirement-title">Storage</div>
+                        <div>500GB+ for recordings (NAS/SAN recommended for enterprise)</div>
+                    </div>
+                    <div class="requirement-item fade-in">
+                        <div class="requirement-title">Network</div>
+                        <div>Gigabit Ethernet recommended, 802.11ac Wi-Fi supported</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <img src="/assets/images/aiit-logo.jpg" alt="AI-IT Inc" class="footer-logo">
+                    <h5 class="mt-3">AI-IT Inc</h5>
+                    <p class="opacity-75">Empowering Smart Security Solutions</p>
+                    
+                    <div class="social-links">
+                        <a href="#" class="social-link">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="social-link">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="social-link">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="#" class="social-link">
+                            <i class="fab fa-github"></i>
+                        </a>
+                    </div>
+                    
+                    <div class="row mt-4">
+                        <div class="col-md-4">
+                            <h6>Products</h6>
+                            <ul class="list-unstyled">
+                                <li><a href="#" class="text-light opacity-75">NVR System</a></li>
+                                <li><a href="#" class="text-light opacity-75">Mobile Apps</a></li>
+                                <li><a href="#" class="text-light opacity-75">Cloud Services</a></li>
+                            </ul>
+                        </div>
+                        <div class="col-md-4">
+                            <h6>Support</h6>
+                            <ul class="list-unstyled">
+                                <li><a href="#" class="text-light opacity-75">Documentation</a></li>
+                                <li><a href="#" class="text-light opacity-75">Community</a></li>
+                                <li><a href="#" class="text-light opacity-75">Contact</a></li>
+                            </ul>
+                        </div>
+                        <div class="col-md-4">
+                            <h6>Company</h6>
+                            <ul class="list-unstyled">
+                                <li><a href="#" class="text-light opacity-75">About Us</a></li>
+                                <li><a href="#" class="text-light opacity-75">Careers</a></li>
+                                <li><a href="#" class="text-light opacity-75">Privacy</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <hr class="my-4 opacity-25">
+                    <p class="opacity-50">© 2025 AI-IT Inc. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Loading overlay
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                document.getElementById('loadingOverlay').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('loadingOverlay').style.display = 'none';
+                }, 500);
+            }, 1500);
+        });
+
+        // Scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Observe all fade-in elements
+            document.querySelectorAll('.fade-in').forEach(el => {
+                observer.observe(el);
+            });
+
+            // Animate counters
+            animateCounters();
+        });
+
+        function animateCounters() {
+            const counters = document.querySelectorAll('[data-count]');
+            
+            counters.forEach(counter => {
+                const target = parseFloat(counter.getAttribute('data-count'));
+                const duration = 2000;
+                const step = target / (duration / 16);
+                let current = 0;
+                
+                const timer = setInterval(() => {
+                    current += step;
+                    if (current >= target) {
+                        current = target;
+                        clearInterval(timer);
+                    }
+                    
+                    if (target % 1 === 0) {
+                        counter.textContent = Math.floor(current);
+                    } else {
+                        counter.textContent = current.toFixed(1);
+                    }
+                }, 16);
+            });
+        }
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // System check simulation
+        function performSystemCheck() {
+            const checks = [
+                'Checking system compatibility...',
+                'Verifying network connectivity...',
+                'Loading camera drivers...',
+                'Initializing AI analytics engine...',
+                'Connecting to smart home platforms...',
+                'System ready!'
+            ];
+            
+            let currentCheck = 0;
+            const statusElement = document.querySelector('.loading-overlay p');
+            
+            const checkInterval = setInterval(() => {
+                if (currentCheck < checks.length) {
+                    statusElement.textContent = checks[currentCheck];
+                    currentCheck++;
+                } else {
+                    clearInterval(checkInterval);
+                }
+            }, 250);
+        }
+
+        // Start system check
+        performSystemCheck();
+    </script>
+</body>
+</html>

@@ -12,4 +12,480 @@
                         <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                             Total Cameras
                         </div>
-                        <div class="h5 mb-0 font-weight
+                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="total-cameras">0</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-video fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-success shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                            Online Cameras
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="online-cameras">0</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-check-circle fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-info shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                            Recording Cameras
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="recording-cameras">0</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-record-vinyl fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-warning shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                            Storage Used
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="storage-used">0%</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-hdd fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Camera Grid and System Status -->
+<div class="row">
+    <!-- Camera Preview Grid -->
+    <div class="col-lg-8">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">
+                    <i class="fas fa-video me-2"></i>Camera Overview
+                </h6>
+                <div class="dropdown no-arrow">
+                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown">
+                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right shadow">
+                        <div class="dropdown-header">Camera Actions:</div>
+                        <a class="dropdown-item" href="#" onclick="refreshCameras()">
+                            <i class="fas fa-sync fa-sm fa-fw mr-2 text-gray-400"></i>Refresh All
+                        </a>
+                        <a class="dropdown-item" href="#" onclick="startAllRecording()">
+                            <i class="fas fa-play fa-sm fa-fw mr-2 text-gray-400"></i>Start All Recording
+                        </a>
+                        <a class="dropdown-item" href="#" onclick="stopAllRecording()">
+                            <i class="fas fa-stop fa-sm fa-fw mr-2 text-gray-400"></i>Stop All Recording
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="/WebViewer/Live">
+                            <i class="fas fa-eye fa-sm fa-fw mr-2 text-gray-400"></i>Full Live View
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row" id="camera-preview-grid">
+                    <!-- Camera previews will be loaded here -->
+                    <div class="col-12 text-center py-5">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="sr-only">Loading cameras...</span>
+                        </div>
+                        <p class="mt-3 text-muted">Loading camera feeds...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- System Information -->
+    <div class="col-lg-4">
+        <!-- System Status -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">
+                    <i class="fas fa-server me-2"></i>System Status
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <div class="small text-gray-500">System Health</div>
+                    <div class="h5 mb-0">
+                        <span class="badge bg-success" id="system-health">Excellent</span>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="small text-gray-500">CPU Usage</div>
+                    <div class="progress mb-1">
+                        <div class="progress-bar bg-info" role="progressbar" style="width: 25%" id="cpu-progress"></div>
+                    </div>
+                    <div class="small text-gray-500" id="cpu-usage">25%</div>
+                </div>
+                <div class="mb-3">
+                    <div class="small text-gray-500">Memory Usage</div>
+                    <div class="progress mb-1">
+                        <div class="progress-bar bg-warning" role="progressbar" style="width: 45%" id="memory-progress"></div>
+                    </div>
+                    <div class="small text-gray-500" id="memory-usage">45%</div>
+                </div>
+                <div class="mb-3">
+                    <div class="small text-gray-500">Network Traffic</div>
+                    <div class="progress mb-1">
+                        <div class="progress-bar bg-success" role="progressbar" style="width: 60%" id="network-progress"></div>
+                    </div>
+                    <div class="small text-gray-500" id="network-usage">60 Mbps</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Events -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">
+                    <i class="fas fa-bell me-2"></i>Recent Events
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="list-group list-group-flush" id="recent-events">
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="fw-bold">Motion Detected</div>
+                            <small class="text-muted">Camera 1 - Front Door</small>
+                        </div>
+                        <small class="text-muted">2 min ago</small>
+                    </div>
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="fw-bold">Recording Started</div>
+                            <small class="text-muted">Camera 3 - Parking Lot</small>
+                        </div>
+                        <small class="text-muted">5 min ago</small>
+                    </div>
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="fw-bold">Camera Online</div>
+                            <small class="text-muted">Camera 2 - Back Yard</small>
+                        </div>
+                        <small class="text-muted">10 min ago</small>
+                    </div>
+                </div>
+                <div class="text-center mt-3">
+                    <a href="#" class="btn btn-sm btn-outline-primary">View All Events</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">
+                    <i class="fas fa-bolt me-2"></i>Quick Actions
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <button class="btn btn-success btn-sm" onclick="armSystem()">
+                        <i class="fas fa-shield-alt me-2"></i>Arm System
+                    </button>
+                    <button class="btn btn-warning btn-sm" onclick="disarmSystem()">
+                        <i class="fas fa-shield-alt me-2"></i>Disarm System
+                    </button>
+                    <button class="btn btn-info btn-sm" onclick="refreshCameras()">
+                        <i class="fas fa-sync me-2"></i>Refresh Cameras
+                    </button>
+                    <button class="btn btn-primary btn-sm" onclick="window.open('/WebViewer/Live', '_blank')">
+                        <i class="fas fa-eye me-2"></i>Open Live View
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Storage and Analytics -->
+<div class="row">
+    <!-- Storage Information -->
+    <div class="col-lg-6">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">
+                    <i class="fas fa-hdd me-2"></i>Storage Information
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <canvas id="storageChart" width="200" height="200"></canvas>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <div class="small text-gray-500">Total Capacity</div>
+                            <div class="h5 mb-0" id="total-storage">2.0 TB</div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="small text-gray-500">Used Space</div>
+                            <div class="h5 mb-0" id="used-storage">1.2 TB</div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="small text-gray-500">Free Space</div>
+                            <div class="h5 mb-0" id="free-storage">800 GB</div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="small text-gray-500">Retention Period</div>
+                            <div class="h5 mb-0" id="retention-period">30 days</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Analytics -->
+    <div class="col-lg-6">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">
+                    <i class="fas fa-chart-line me-2"></i>Analytics Overview
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-md-3">
+                        <div class="mb-3">
+                            <div class="h4 mb-0 text-primary" id="motion-events-today">24</div>
+                            <div class="small text-gray-500">Motion Events Today</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="mb-3">
+                            <div class="h4 mb-0 text-success" id="recordings-today">156</div>
+                            <div class="small text-gray-500">Recordings Today</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="mb-3">
+                            <div class="h4 mb-0 text-info" id="avg-bitrate">4.2</div>
+                            <div class="small text-gray-500">Avg Bitrate (Mbps)</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="mb-3">
+                            <div class="h4 mb-0 text-warning" id="uptime">99.8%</div>
+                            <div class="small text-gray-500">System Uptime</div>
+                        </div>
+                    </div>
+                </div>
+                <canvas id="analyticsChart" width="400" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize dashboard
+    loadDashboardData();
+    
+    // Refresh data every 30 seconds
+    setInterval(loadDashboardData, 30000);
+    
+    // Initialize charts
+    initializeCharts();
+});
+
+function loadDashboardData() {
+    // Load camera data
+    fetch('/WebViewer/GetCameras')
+        .then(response => response.json())
+        .then(cameras => {
+            updateCameraStats(cameras);
+            updateCameraGrid(cameras);
+        })
+        .catch(error => console.error('Error loading cameras:', error));
+    
+    // Load system status
+    loadSystemStatus();
+}
+
+function updateCameraStats(cameras) {
+    const totalCameras = cameras.length;
+    const onlineCameras = cameras.filter(c => c.status === 'Online').length;
+    const recordingCameras = cameras.filter(c => c.isRecording).length;
+    
+    document.getElementById('total-cameras').textContent = totalCameras;
+    document.getElementById('online-cameras').textContent = onlineCameras;
+    document.getElementById('recording-cameras').textContent = recordingCameras;
+}
+
+function updateCameraGrid(cameras) {
+    const grid = document.getElementById('camera-preview-grid');
+    
+    if (cameras.length === 0) {
+        grid.innerHTML = `
+            <div class="col-12 text-center py-5">
+                <i class="fas fa-video-slash fa-3x text-gray-300 mb-3"></i>
+                <p class="text-muted">No cameras configured</p>
+                <a href="/WebViewer/Settings" class="btn btn-primary">Add Cameras</a>
+            </div>
+        `;
+        return;
+    }
+    
+    grid.innerHTML = '';
+    cameras.slice(0, 6).forEach(camera => {
+        const cameraCard = `
+            <div class="col-lg-4 col-md-6 mb-3">
+                <div class="card camera-preview-card">
+                    <div class="camera-preview-container" style="height: 150px;">
+                        <div class="camera-placeholder d-flex align-items-center justify-content-center text-white">
+                            <div class="text-center">
+                                <i class="fas fa-video fa-2x mb-2"></i>
+                                <div class="small">${camera.name}</div>
+                                <div class="badge ${camera.status === 'Online' ? 'bg-success' : 'bg-danger'} mt-1">
+                                    ${camera.status}
+                                </div>
+                                ${camera.isRecording ? '<div class="badge bg-warning mt-1">Recording</div>' : ''}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body p-2">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <small class="text-muted">${camera.location || 'Unknown Location'}</small>
+                            <div class="btn-group btn-group-sm">
+                                <button class="btn btn-outline-primary btn-sm" onclick="viewCamera(${camera.id})">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="btn btn-outline-secondary btn-sm" onclick="toggleRecording(${camera.id})">
+                                    <i class="fas ${camera.isRecording ? 'fa-stop' : 'fa-play'}"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        grid.innerHTML += cameraCard;
+    });
+    
+    if (cameras.length > 6) {
+        grid.innerHTML += `
+            <div class="col-12 text-center">
+                <a href="/WebViewer/Live" class="btn btn-outline-primary">
+                    View All ${cameras.length} Cameras
+                </a>
+            </div>
+        `;
+    }
+}
+
+function loadSystemStatus() {
+    // Simulate system status data
+    const cpuUsage = Math.floor(Math.random() * 30) + 20;
+    const memoryUsage = Math.floor(Math.random() * 20) + 40;
+    const networkUsage = Math.floor(Math.random() * 40) + 30;
+    
+    document.getElementById('cpu-usage').textContent = cpuUsage + '%';
+    document.getElementById('cpu-progress').style.width = cpuUsage + '%';
+    
+    document.getElementById('memory-usage').textContent = memoryUsage + '%';
+    document.getElementById('memory-progress').style.width = memoryUsage + '%';
+    
+    document.getElementById('network-usage').textContent = networkUsage + ' Mbps';
+    document.getElementById('network-progress').style.width = (networkUsage / 100 * 100) + '%';
+    
+    // Update storage
+    const storageUsed = Math.floor(Math.random() * 20) + 60;
+    document.getElementById('storage-used').textContent = storageUsed + '%';
+}
+
+function initializeCharts() {
+    // Storage Chart (Pie Chart)
+    const storageCtx = document.getElementById('storageChart').getContext('2d');
+    new Chart(storageCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Used', 'Free'],
+            datasets: [{
+                data: [60, 40],
+                backgroundColor: ['#4e73df', '#1cc88a'],
+                borderWidth: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
+        }
+    });
+    
+    // Analytics Chart (Line Chart)
+    const analyticsCtx = document.getElementById('analyticsChart').getContext('2d');
+    new Chart(analyticsCtx, {
+        type: 'line',
+        data: {
+            labels: ['6h ago', '5h ago', '4h ago', '3h ago', '2h ago', '1h ago', 'Now'],
+            datasets: [{
+                label: 'Motion Events',
+                data: [12, 19, 8, 15, 22, 18, 24],
+                borderColor: '#4e73df',
+                backgroundColor: 'rgba(78, 115, 223, 0.1)',
+                tension: 0.3
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
+        }
+    });
+}
+
+function viewCamera(cameraId) {
+    window.open(`/WebViewer/Live?camera=${cameraId}`, '_blank');
+}
+
+function toggleRecording(cameraId) {
+    // Implementation for toggling recording
+    console.log('Toggle recording for camera:', cameraId);
+}
+</script>
+
+<!-- Chart.js for analytics -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

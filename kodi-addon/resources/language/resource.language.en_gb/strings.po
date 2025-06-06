@@ -1,0 +1,194 @@
+# AI-IT Inc NVR Kodi Addon Language File
+# English (United Kingdom)
+
+msgid ""
+msgstr ""
+"Project-Id-Version: AI-IT Inc NVR\n"
+"Report-Msgid-Bugs-To: support@aiit-inc.com\n"
+"POT-Creation-Date: 2025-01-06 12:00+0000\n"
+"PO-Revision-Date: 2025-01-06 12:00+0000\n"
+"Last-Translator: AI-IT Inc <support@aiit-inc.com>\n"
+"Language-Team: English\n"
+"Language: en_GB\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+# Categories
+msgctxt "#30001"
+msgid "Connection Settings"
+msgstr ""
+
+msgctxt "#30002"
+msgid "Streaming Settings"
+msgstr ""
+
+msgctxt "#30003"
+msgid "Interface Settings"
+msgstr ""
+
+msgctxt "#30004"
+msgid "Advanced Settings"
+msgstr ""
+
+# Connection Settings
+msgctxt "#30010"
+msgid "NVR Server"
+msgstr ""
+
+msgctxt "#30011"
+msgid "NVR Host"
+msgstr ""
+
+msgctxt "#30012"
+msgid "NVR Port"
+msgstr ""
+
+msgctxt "#30013"
+msgid "Use HTTPS"
+msgstr ""
+
+msgctxt "#30020"
+msgid "Authentication"
+msgstr ""
+
+msgctxt "#30021"
+msgid "Username"
+msgstr ""
+
+msgctxt "#30022"
+msgid "Password"
+msgstr ""
+
+# Streaming Settings
+msgctxt "#30030"
+msgid "Video Quality"
+msgstr ""
+
+msgctxt "#30031"
+msgid "Stream Quality"
+msgstr ""
+
+msgctxt "#30032"
+msgid "Grid View Quality"
+msgstr ""
+
+msgctxt "#30033"
+msgid "Buffer Size (MB)"
+msgstr ""
+
+msgctxt "#30034"
+msgid "Enable Audio"
+msgstr ""
+
+# Quality Options
+msgctxt "#30041"
+msgid "Low (480p)"
+msgstr ""
+
+msgctxt "#30042"
+msgid "Medium (720p)"
+msgstr ""
+
+msgctxt "#30043"
+msgid "High (1080p)"
+msgstr ""
+
+msgctxt "#30044"
+msgid "Ultra (4K)"
+msgstr ""
+
+# Interface Settings
+msgctxt "#30040"
+msgid "User Interface"
+msgstr ""
+
+msgctxt "#30051"
+msgid "Show Notifications"
+msgstr ""
+
+msgctxt "#30052"
+msgid "Notification Duration (seconds)"
+msgstr ""
+
+msgctxt "#30053"
+msgid "Auto Refresh Interval (seconds)"
+msgstr ""
+
+# Advanced Settings
+msgctxt "#30050"
+msgid "Technical"
+msgstr ""
+
+msgctxt "#30061"
+msgid "Debug Logging"
+msgstr ""
+
+msgctxt "#30062"
+msgid "Connection Timeout (seconds)"
+msgstr ""
+
+msgctxt "#30063"
+msgid "Max Connection Retries"
+msgstr ""
+
+# Help Text
+msgctxt "#30111"
+msgid "IP address or hostname of your AI-IT Inc NVR system"
+msgstr ""
+
+msgctxt "#30112"
+msgid "Port number for NVR web interface (default: 8080)"
+msgstr ""
+
+msgctxt "#30113"
+msgid "Use encrypted HTTPS connection (requires SSL certificate)"
+msgstr ""
+
+msgctxt "#30121"
+msgid "Username for NVR system login"
+msgstr ""
+
+msgctxt "#30122"
+msgid "Password for NVR system login"
+msgstr ""
+
+msgctxt "#30131"
+msgid "Video quality for live camera streams"
+msgstr ""
+
+msgctxt "#30132"
+msgid "Video quality for multi-camera grid view (lower quality recommended)"
+msgstr ""
+
+msgctxt "#30133"
+msgid "Buffer size for video streaming (higher = more stable, slower start)"
+msgstr ""
+
+msgctxt "#30134"
+msgid "Include audio in video streams (if supported by cameras)"
+msgstr ""
+
+msgctxt "#30151"
+msgid "Show popup notifications for events and status updates"
+msgstr ""
+
+msgctxt "#30152"
+msgid "How long to display notifications on screen"
+msgstr ""
+
+msgctxt "#30153"
+msgid "How often to refresh live camera feeds and status"
+msgstr ""
+
+msgctxt "#30161"
+msgid "Enable detailed logging for troubleshooting"
+msgstr ""
+
+msgctxt "#30162"
+msgid "Timeout for network connections to NVR system"
+msgstr ""
+
+msgctxt "#30163"
+msgid "Number of times to retry failed connections"
+msgstr ""

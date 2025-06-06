@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="plugin.video.aiit-nvr" 
+       name="AI-IT Inc NVR" 
+       version="1.0.0" 
+       provider-name="AI-IT Inc">
+    <requires>
+        <import addon="xbmc.python" version="3.0.0"/>
+        <import addon="script.module.requests" version="2.25.1"/>
+        <import addon="script.module.inputstreamhelper" version="0.5.2"/>
+    </requires>
+    <extension point="xbmc.python.pluginsource" library="main.py">
+        <provides>video</provides>
+    </extension>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <language>en</language>
+        <summary lang="en">AI-IT Inc Professional NVR System Integration</summary>
+        <description lang="en">
+            Connect your Kodi media center to the AI-IT Inc NVR system for professional security monitoring.
+            
+            Features:
+            • Live camera streaming with multiple quality options
+            • Recording playback with timeline navigation
+            • Motion detection alerts and event review
+            • Multi-camera grid view for comprehensive monitoring
+            • PTZ camera control (pan, tilt, zoom)
+            • Snapshot capture and gallery management
+            • Smart home integration support
+            • Hardware acceleration for smooth playback
+            
+            Transform your entertainment system into a professional security hub with AI-IT Inc's advanced NVR technology.
+        </description>
+        <disclaimer lang="en">This addon requires an AI-IT Inc NVR system to function. Visit aiit-inc.com for more information.</disclaimer>
+        <license>GPL-3.0</license>
+        <website>https://aiit-inc.com</website>
+        <email>support@aiit-inc.com</email>
+        <forum>https://forum.aiit-inc.com/kodi</forum>
+        <source>https://github.com/aiit-inc/nvr-kodi-addon</source>
+        <news>
+v1.0.0 (2025-01-06)
+- Initial release
+- Live camera streaming
+- Recording playback
+- Motion detection integration
+- Multi-camera grid view
+- PTZ camera control
+- Hardware acceleration support
+        </news>
+        <assets>
+            <icon>resources/icon.png</icon>
+            <fanart>resources/fanart.jpg</fanart>
+            <screenshot>resources/screenshot01.jpg</screenshot>
+            <screenshot>resources/screenshot02.jpg</screenshot>
+            <screenshot>resources/screenshot03.jpg</screenshot>
+        </assets>
+    </extension>
+</addon>
