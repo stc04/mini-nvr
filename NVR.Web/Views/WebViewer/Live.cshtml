@@ -1,0 +1,345 @@
+@{
+    ViewData["Title"] = "Live View";
+}
+
+<!-- Layout Controls -->
+<div class="row mb-3">
+    <div class="col-12">
+        <div class="card shadow">
+            <div class="card-body py-2">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-outline-primary" onclick="setLayout(1)">1x1</button>
+                        <button type="button" class="btn btn-outline-primary" onclick="setLayout(4)">2x2</button>
+                        <button type="button" class="btn btn-outline-primary active" onclick="setLayout(9)">3x3</button>
+                        <button type="button" class="btn btn-outline-primary" onclick="setLayout(16)">4x4</button>
+                        <button type="button" class="btn btn-outline-primary" onclick="setLayout(48)">6x8</button>
+                    </div>
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-success" onclick="startAllStreams()">
+                            <i class="fas fa-play me-1"></i>Start All
+                        </button>
+                        <button type="button" class="btn btn-danger" onclick="stopAllStreams()">
+                            <i class="fas fa-stop me-1"></i>Stop All
+                        </button>
+                        <button type="button" class="btn btn-info" onclick="toggleFullscreen()">
+                            <i class="fas fa-expand me-1"></i>Fullscreen
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Video Grid -->
+<div class="row">
+    <div class="col-12">
+        <div class="card shadow">
+            <div class="card-body p-1">
+                <div id="video-grid" class="video-grid grid-3x3">
+                    <!-- Video streams will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Camera Controls Modal -->
+<div class="modal fade" id="cameraControlModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Camera Controls</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-8">
+                        <div id="selected-camera-stream" class="camera-stream-large">
+                            <!-- Large camera view -->
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="camera-controls">
+                            <h6>PTZ Controls</h6>
+                            <div class="ptz-controls mb-3">
+                                <div class="row">
+                                    <div class="col-4"></div>
+                                    <div class="col-4">
+                                        <button class="btn btn-outline-secondary btn-sm w-100" onclick="ptzControl('up')">
+                                            <i class="fas fa-chevron-up"></i>
+                                        </button>
+                                    </div>
+                                    <div class="col-4"></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-4">
+                                        <button class="btn btn-outline-secondary btn-sm w-100" onclick="ptzControl('left')">
+                                            <i class="fas fa-chevron-left"></i>
+                                        </button>
+                                    </div>
+                                    <div class="col-4">
+                                        <button class="btn btn-outline-secondary btn-sm w-100" onclick="ptzControl('home')">
+                                            <i class="fas fa-home"></i>
+                                        </button>
+                                    </div>
+                                    <div class="col-4">
+                                        <button class="btn btn-outline-secondary btn-sm w-100" onclick="ptzControl('right')">
+                                            <i class="fas fa-chevron-right"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-4"></div>
+                                    <div class="col-4">
+                                        <button class="btn btn-outline-secondary btn-sm w-100" onclick="ptzControl('down')">
+                                            <i class="fas fa-chevron-down"></i>
+                                        </button>
+                                    </div>
+                                    <div class="col-4"></div>
+                                </div>
+                            </div>
+                            
+                            <h6>Zoom Controls</h6>
+                            <div class="zoom-controls mb-3">
+                                <button class="btn btn-outline-secondary btn-sm me-2" onclick="ptzControl('zoom-in')">
+                                    <i class="fas fa-search-plus"></i> Zoom In
+                                </button>
+                                <button class="btn btn-outline-secondary btn-sm" onclick="ptzControl('zoom-out')">
+                                    <i class="fas fa-search-minus"></i> Zoom Out
+                                </button>
+                            </div>
+                            
+                            <h6>Recording</h6>
+                            <div class="recording-controls mb-3">
+                                <button class="btn btn-success btn-sm me-2" onclick="startRecording()">
+                                    <i class="fas fa-play"></i> Start
+                                </button>
+                                <button class="btn btn-danger btn-sm" onclick="stopRecording()">
+                                    <i class="fas fa-stop"></i> Stop
+                                </button>
+                            </div>
+                            
+                            <h6>Presets</h6>
+                            <div class="preset-controls">
+                                <select class="form-select form-select-sm mb-2" id="preset-select">
+                                    <option value="">Select Preset</option>
+                                    <option value="1">Preset 1</option>
+                                    <option value="2">Preset 2</option>
+                                    <option value="3">Preset 3</option>
+                                </select>
+                                <button class="btn btn-primary btn-sm me-2" onclick="goToPreset()">Go To</button>
+                                <button class="btn btn-secondary btn-sm" onclick="savePreset()">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        let currentLayout = 9;
+        let selectedCameraId = null;
+        let cameras = [];
+
+        $(document).ready(function() {
+            loadCameras();
+            setInterval(updateStreams, 1000);
+        });
+
+        function loadCameras() {
+            fetch('/WebViewer/GetCameras')
+                .then(response => response.json())
+                .then(data => {
+                    cameras = data;
+                    setupVideoGrid();
+                })
+                .catch(error => console.error('Error loading cameras:', error));
+        }
+
+        function setLayout(count) {
+            currentLayout = count;
+            document.querySelectorAll('.btn-group .btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            const grid = document.getElementById('video-grid');
+            grid.className = `video-grid grid-${getGridClass(count)}`;
+            setupVideoGrid();
+        }
+
+        function getGridClass(count) {
+            switch(count) {
+                case 1: return '1x1';
+                case 4: return '2x2';
+                case 9: return '3x3';
+                case 16: return '4x4';
+                case 48: return '6x8';
+                default: return '3x3';
+            }
+        }
+
+        function setupVideoGrid() {
+            const grid = document.getElementById('video-grid');
+            grid.innerHTML = '';
+            
+            const displayCameras = cameras.slice(0, currentLayout);
+            
+            displayCameras.forEach((camera, index) => {
+                const videoContainer = createVideoContainer(camera, index);
+                grid.appendChild(videoContainer);
+            });
+            
+            // Fill remaining slots with placeholders
+            for(let i = displayCameras.length; i < currentLayout; i++) {
+                const placeholder = createPlaceholder(i);
+                grid.appendChild(placeholder);
+            }
+        }
+
+        function createVideoContainer(camera, index) {
+            const container = document.createElement('div');
+            container.className = 'video-container';
+            container.onclick = () => openCameraControls(camera.id);
+            
+            container.innerHTML = `
+                <div class="video-stream" id="stream-${camera.id}">
+                    <div class="video-placeholder bg-dark d-flex align-items-center justify-content-center h-100">
+                        <div class="text-center text-white">
+                            <i class="fas fa-video fa-3x mb-2"></i>
+                            <div>${camera.name}</div>
+                            <small class="text-muted">${camera.ipAddress}</small>
+                        </div>
+                    </div>
+                    <div class="video-overlay">
+                        <div class="camera-info">
+                            <span class="badge ${camera.status === 'Online' ? 'bg-success' : 'bg-danger'} me-1">
+                                ${camera.status}
+                            </span>
+                            ${camera.isRecording ? '<span class="badge bg-danger"><i class="fas fa-circle"></i> REC</span>' : ''}
+                        </div>
+                        <div class="camera-controls-overlay">
+                            <button class="btn btn-sm btn-outline-light" onclick="event.stopPropagation(); toggleRecording(${camera.id})">
+                                <i class="fas ${camera.isRecording ? 'fa-stop' : 'fa-play'}"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="camera-title">${camera.name}</div>
+            `;
+            
+            return container;
+        }
+
+        function createPlaceholder(index) {
+            const container = document.createElement('div');
+            container.className = 'video-container';
+            
+            container.innerHTML = `
+                <div class="video-stream">
+                    <div class="video-placeholder bg-secondary d-flex align-items-center justify-content-center h-100">
+                        <div class="text-center text-white-50">
+                            <i class="fas fa-plus fa-2x mb-2"></i>
+                            <div>Add Camera</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="camera-title">Slot ${index + 1}</div>
+            `;
+            
+            return container;
+        }
+
+        function openCameraControls(cameraId) {
+            selectedCameraId = cameraId;
+            const camera = cameras.find(c => c.id === cameraId);
+            if (camera) {
+                document.querySelector('#cameraControlModal .modal-title').textContent = `${camera.name} Controls`;
+                const modal = new bootstrap.Modal(document.getElementById('cameraControlModal'));
+                modal.show();
+            }
+        }
+
+        function toggleRecording(cameraId) {
+            const camera = cameras.find(c => c.id === cameraId);
+            if (!camera) return;
+            
+            const endpoint = camera.isRecording ? 'StopRecording' : 'StartRecording';
+            
+            fetch(`/WebViewer/${endpoint}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ cameraId: cameraId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    camera.isRecording = !camera.isRecording;
+                    setupVideoGrid();
+                }
+            })
+            .catch(error => console.error('Error toggling recording:', error));
+        }
+
+        function startAllStreams() {
+            // Implementation for starting all streams
+            console.log('Starting all streams...');
+        }
+
+        function stopAllStreams() {
+            // Implementation for stopping all streams
+            console.log('Stopping all streams...');
+        }
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        function ptzControl(direction) {
+            if (!selectedCameraId) return;
+            
+            // Implementation for PTZ controls
+            console.log(`PTZ Control: ${direction} for camera ${selectedCameraId}`);
+        }
+
+        function startRecording() {
+            if (selectedCameraId) {
+                toggleRecording(selectedCameraId);
+            }
+        }
+
+        function stopRecording() {
+            if (selectedCameraId) {
+                toggleRecording(selectedCameraId);
+            }
+        }
+
+        function goToPreset() {
+            const preset = document.getElementById('preset-select').value;
+            if (preset && selectedCameraId) {
+                console.log(`Going to preset ${preset} for camera ${selectedCameraId}`);
+            }
+        }
+
+        function savePreset() {
+            const preset = document.getElementById('preset-select').value;
+            if (preset && selectedCameraId) {
+                console.log(`Saving preset ${preset} for camera ${selectedCameraId}`);
+            }
+        }
+
+        function updateStreams() {
+            // Update stream status and info
+            // This would typically update the video feeds
+        }
+    </script>
+}

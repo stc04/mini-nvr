@@ -1,0 +1,226 @@
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="row">
+    <!-- System Overview Cards -->
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-primary shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                            Total Cameras
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="total-cameras">0</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-video fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-success shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                            Online Cameras
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="online-cameras">0</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-check-circle fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-info shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                            Recording
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="recording-cameras">0</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-record-vinyl fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-warning shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                            Storage Used
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="storage-used">0%</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-hdd fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card shadow">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Quick Actions</h6>
+            </div>
+            <div class="card-body">
+                <div class="btn-group me-2" role="group">
+                    <button type="button" class="btn btn-success" onclick="startAllRecording()">
+                        <i class="fas fa-play me-1"></i>Start All Recording
+                    </button>
+                    <button type="button" class="btn btn-danger" onclick="stopAllRecording()">
+                        <i class="fas fa-stop me-1"></i>Stop All Recording
+                    </button>
+                </div>
+                <div class="btn-group me-2" role="group">
+                    <button type="button" class="btn btn-primary" onclick="armSystem()">
+                        <i class="fas fa-shield-alt me-1"></i>Arm System
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="disarmSystem()">
+                        <i class="fas fa-shield-alt me-1"></i>Disarm System
+                    </button>
+                </div>
+                <button type="button" class="btn btn-info" onclick="refreshCameras()">
+                    <i class="fas fa-sync me-1"></i>Refresh Cameras
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Camera Grid Preview -->
+<div class="row">
+    <div class="col-12">
+        <div class="card shadow">
+            <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                <h6 class="m-0 font-weight-bold text-primary">Camera Overview</h6>
+                <a href="/WebViewer/Live" class="btn btn-primary btn-sm">
+                    <i class="fas fa-expand me-1"></i>Full View
+                </a>
+            </div>
+            <div class="card-body">
+                <div id="camera-grid" class="row">
+                    <!-- Camera previews will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Events -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card shadow">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Recent Events</h6>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="events-table">
+                        <thead>
+                            <tr>
+                                <th>Time</th>
+                                <th>Event</th>
+                                <th>Camera</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="events-tbody">
+                            <!-- Events will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Dashboard specific JavaScript
+        $(document).ready(function() {
+            loadDashboardData();
+            setInterval(loadDashboardData, 5000); // Refresh every 5 seconds
+        });
+
+        function loadDashboardData() {
+            fetch('/WebViewer/GetCameras')
+                .then(response => response.json())
+                .then(cameras => {
+                    updateDashboardStats(cameras);
+                    updateCameraGrid(cameras);
+                })
+                .catch(error => console.error('Error loading dashboard data:', error));
+        }
+
+        function updateDashboardStats(cameras) {
+            const totalCameras = cameras.length;
+            const onlineCameras = cameras.filter(c => c.status === 'Online').length;
+            const recordingCameras = cameras.filter(c => c.isRecording).length;
+
+            document.getElementById('total-cameras').textContent = totalCameras;
+            document.getElementById('online-cameras').textContent = onlineCameras;
+            document.getElementById('recording-cameras').textContent = recordingCameras;
+        }
+
+        function updateCameraGrid(cameras) {
+            const grid = document.getElementById('camera-grid');
+            grid.innerHTML = '';
+
+            cameras.slice(0, 8).forEach(camera => {
+                const cameraCard = createCameraPreviewCard(camera);
+                grid.appendChild(cameraCard);
+            });
+        }
+
+        function createCameraPreviewCard(camera) {
+            const col = document.createElement('div');
+            col.className = 'col-lg-3 col-md-4 col-sm-6 mb-3';
+            
+            col.innerHTML = `
+                <div class="card camera-preview-card">
+                    <div class="card-body p-2">
+                        <div class="camera-preview-container">
+                            <div class="camera-placeholder bg-dark d-flex align-items-center justify-content-center" style="height: 120px;">
+                                <i class="fas fa-video fa-2x text-white-50"></i>
+                            </div>
+                            <div class="camera-overlay">
+                                <span class="badge ${camera.status === 'Online' ? 'bg-success' : 'bg-danger'} position-absolute top-0 start-0 m-1">
+                                    ${camera.status}
+                                </span>
+                                ${camera.isRecording ? '<span class="badge bg-danger position-absolute top-0 end-0 m-1"><i class="fas fa-circle"></i> REC</span>' : ''}
+                            </div>
+                        </div>
+                        <div class="mt-2">
+                            <h6 class="card-title mb-1">${camera.name}</h6>
+                            <small class="text-muted">${camera.ipAddress}</small>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            return col;
+        }
+    </script>
+}

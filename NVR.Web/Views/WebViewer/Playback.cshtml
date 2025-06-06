@@ -1,0 +1,462 @@
+@{
+    ViewData["Title"] = "Playback";
+}
+
+<!-- Date and Time Selection -->
+<div class="row mb-3">
+    <div class="col-12">
+        <div class="card shadow">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Playback Controls</h6>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <label for="playback-date" class="form-label">Date</label>
+                        <input type="date" class="form-control" id="playback-date" value="">
+                    </div>
+                    <div class="col-md-2">
+                        <label for="start-time" class="form-label">Start Time</label>
+                        <input type="time" class="form-control" id="start-time" value="00:00">
+                    </div>
+                    <div class="col-md-2">
+                        <label for="end-time" class="form-label">End Time</label>
+                        <input type="time" class="form-control" id="end-time" value="23:59">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="camera-select" class="form-label">Camera</label>
+                        <select class="form-select" id="camera-select">
+                            <option value="">All Cameras</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">&nbsp;</label>
+                        <button type="button" class="btn btn-primary d-block w-100" onclick="searchRecordings()">
+                            <i class="fas fa-search me-1"></i>Search
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Timeline -->
+<div class="row mb-3">
+    <div class="col-12">
+        <div class="card shadow">
+            <div class="card-body p-2">
+                <div class="timeline-container">
+                    <div class="timeline-header d-flex justify-content-between align-items-center mb-2">
+                        <div class="timeline-controls">
+                            <button class="btn btn-sm btn-outline-secondary" onclick="zoomTimeline('in')">
+                                <i class="fas fa-search-plus"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-secondary" onclick="zoomTimeline('out')">
+                                <i class="fas fa-search-minus"></i>
+                            </button>
+                            <span class="ms-2" id="timeline-range">00:00 - 23:59</span>
+                        </div>
+                        <div class="playback-controls">
+                            <button class="btn btn-sm btn-outline-secondary" onclick="playbackControl('backward')">
+                                <i class="fas fa-backward"></i>
+                            </button>
+                            <button class="btn btn-sm btn-primary" id="play-pause-btn" onclick="playbackControl('play')">
+                                <i class="fas fa-play"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-secondary" onclick="playbackControl('forward')">
+                                <i class="fas fa-forward"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-secondary" onclick="playbackControl('stop')">
+                                <i class="fas fa-stop"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="timeline" id="timeline">
+                        <div class="timeline-track">
+                            <div class="timeline-cursor" id="timeline-cursor"></div>
+                            <div class="recording-segments" id="recording-segments">
+                                <!-- Recording segments will be populated here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Video Playback -->
+<div class="row">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Video Playback</h6>
+            </div>
+            <div class="card-body p-1">
+                <div class="playback-video-container">
+                    <div id="playback-video" class="playback-video bg-dark d-flex align-items-center justify-content-center">
+                        <div class="text-center text-white">
+                            <i class="fas fa-play-circle fa-5x mb-3"></i>
+                            <h5>Select a recording to play</h5>
+                            <p class="text-muted">Choose a date, time range, and camera to view recordings</p>
+                        </div>
+                    </div>
+                    <div class="video-controls mt-2">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="current-time">
+                                <span id="current-playback-time">00:00:00</span>
+                            </div>
+                            <div class="playback-speed">
+                                <select class="form-select form-select-sm" id="playback-speed" onchange="changePlaybackSpeed()">
+                                    <option value="0.25">0.25x</option>
+                                    <option value="0.5">0.5x</option>
+                                    <option value="1" selected>1x</option>
+                                    <option value="2">2x</option>
+                                    <option value="4">4x</option>
+                                    <option value="8">8x</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card shadow">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Recording List</h6>
+            </div>
+            <div class="card-body">
+                <div class="recording-list" id="recording-list">
+                    <div class="text-center text-muted py-4">
+                        <i class="fas fa-search fa-2x mb-2"></i>
+                        <p>Search for recordings to display list</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card shadow mt-3">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Export Options</h6>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label for="export-format" class="form-label">Format</label>
+                    <select class="form-select" id="export-format">
+                        <option value="mp4">MP4</option>
+                        <option value="avi">AVI</option>
+                        <option value="mov">MOV</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="export-quality" class="form-label">Quality</label>
+                    <select class="form-select" id="export-quality">
+                        <option value="high">High</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="low">Low</option>
+                    </select>
+                </div>
+                <button class="btn btn-success w-100" onclick="exportRecording()">
+                    <i class="fas fa-download me-1"></i>Export Selected
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        let currentRecordings = [];
+        let isPlaying = false;
+        let currentPlaybackTime = 0;
+        let timelineZoom = 1;
+
+        $(document).ready(function() {
+            // Set default date to today
+            document.getElementById('playback-date').value = new Date().toISOString().split('T')[0];
+            
+            loadCamerasForPlayback();
+            initializeTimeline();
+        });
+
+        function loadCamerasForPlayback() {
+            fetch('/WebViewer/GetCameras')
+                .then(response => response.json())
+                .then(cameras => {
+                    const select = document.getElementById('camera-select');
+                    select.innerHTML = '<option value="">All Cameras</option>';
+                    
+                    cameras.forEach(camera => {
+                        const option = document.createElement('option');
+                        option.value = camera.id;
+                        option.textContent = camera.name;
+                        select.appendChild(option);
+                    });
+                })
+                .catch(error => console.error('Error loading cameras:', error));
+        }
+
+        function searchRecordings() {
+            const date = document.getElementById('playback-date').value;
+            const startTime = document.getElementById('start-time').value;
+            const endTime = document.getElementById('end-time').value;
+            const cameraId = document.getElementById('camera-select').value;
+
+            if (!date) {
+                alert('Please select a date');
+                return;
+            }
+
+            // Mock data for demonstration
+            const mockRecordings = [
+                {
+                    id: 1,
+                    cameraId: 1,
+                    cameraName: 'Front Door Camera',
+                    startTime: '08:30:00',
+                    endTime: '09:15:00',
+                    duration: '45:00',
+                    fileSize: '2.1 GB',
+                    filePath: '/recordings/camera1/20231201_083000.mp4'
+                },
+                {
+                    id: 2,
+                    cameraId: 1,
+                    cameraName: 'Front Door Camera',
+                    startTime: '14:20:00',
+                    endTime: '15:45:00',
+                    duration: '1:25:00',
+                    fileSize: '3.8 GB',
+                    filePath: '/recordings/camera1/20231201_142000.mp4'
+                },
+                {
+                    id: 3,
+                    cameraId: 2,
+                    cameraName: 'Backyard Camera',
+                    startTime: '10:15:00',
+                    endTime: '11:30:00',
+                    duration: '1:15:00',
+                    fileSize: '2.9 GB',
+                    filePath: '/recordings/camera2/20231201_101500.mp4'
+                }
+            ];
+
+            currentRecordings = mockRecordings;
+            displayRecordingList(mockRecordings);
+            updateTimeline(mockRecordings);
+        }
+
+        function displayRecordingList(recordings) {
+            const listContainer = document.getElementById('recording-list');
+            
+            if (recordings.length === 0) {
+                listContainer.innerHTML = `
+                    <div class="text-center text-muted py-4">
+                        <i class="fas fa-exclamation-circle fa-2x mb-2"></i>
+                        <p>No recordings found for the selected criteria</p>
+                    </div>
+                `;
+                return;
+            }
+
+            listContainer.innerHTML = recordings.map(recording => `
+                <div class="recording-item mb-2 p-2 border rounded cursor-pointer" onclick="selectRecording(${recording.id})">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h6 class="mb-1">${recording.cameraName}</h6>
+                            <small class="text-muted">
+                                ${recording.startTime} - ${recording.endTime}
+                            </small>
+                        </div>
+                        <div class="text-end">
+                            <small class="text-muted d-block">${recording.duration}</small>
+                            <small class="text-muted">${recording.fileSize}</small>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateTimeline(recordings) {
+            const segmentsContainer = document.getElementById('recording-segments');
+            segmentsContainer.innerHTML = '';
+
+            recordings.forEach(recording => {
+                const segment = document.createElement('div');
+                segment.className = 'recording-segment';
+                segment.style.left = timeToPercentage(recording.startTime) + '%';
+                segment.style.width = durationToPercentage(recording.startTime, recording.endTime) + '%';
+                segment.onclick = () => selectRecording(recording.id);
+                segment.title = `${recording.cameraName}: ${recording.startTime} - ${recording.endTime}`;
+                
+                segmentsContainer.appendChild(segment);
+            });
+        }
+
+        function timeToPercentage(timeString) {
+            const [hours, minutes, seconds] = timeString.split(':').map(Number);
+            const totalMinutes = hours * 60 + minutes + seconds / 60;
+            return (totalMinutes / (24 * 60)) * 100;
+        }
+
+        function durationToPercentage(startTime, endTime) {
+            const startPercent = timeToPercentage(startTime);
+            const endPercent = timeToPercentage(endTime);
+            return endPercent - startPercent;
+        }
+
+        function selectRecording(recordingId) {
+            const recording = currentRecordings.find(r => r.id === recordingId);
+            if (!recording) return;
+
+            // Highlight selected recording
+            document.querySelectorAll('.recording-item').forEach(item => {
+                item.classList.remove('border-primary', 'bg-light');
+            });
+            event.currentTarget.classList.add('border-primary', 'bg-light');
+
+            // Load video for playback
+            loadVideoForPlayback(recording);
+        }
+
+        function loadVideoForPlayback(recording) {
+            const videoContainer = document.getElementById('playback-video');
+            videoContainer.innerHTML = `
+                <div class="text-center text-white">
+                    <i class="fas fa-spinner fa-spin fa-3x mb-3"></i>
+                    <h5>Loading ${recording.cameraName}</h5>
+                    <p class="text-muted">${recording.startTime} - ${recording.endTime}</p>
+                </div>
+            `;
+
+            // Simulate loading delay
+            setTimeout(() => {
+                videoContainer.innerHTML = `
+                    <div class="text-center text-white">
+                        <i class="fas fa-video fa-3x mb-3"></i>
+                        <h5>${recording.cameraName}</h5>
+                        <p class="text-muted">Recording: ${recording.startTime} - ${recording.endTime}</p>
+                        <button class="btn btn-primary" onclick="startPlayback()">
+                            <i class="fas fa-play me-1"></i>Start Playback
+                        </button>
+                    </div>
+                `;
+            }, 1000);
+        }
+
+        function playbackControl(action) {
+            switch(action) {
+                case 'play':
+                    if (isPlaying) {
+                        pausePlayback();
+                    } else {
+                        startPlayback();
+                    }
+                    break;
+                case 'stop':
+                    stopPlayback();
+                    break;
+                case 'forward':
+                    seekForward();
+                    break;
+                case 'backward':
+                    seekBackward();
+                    break;
+            }
+        }
+
+        function startPlayback() {
+            isPlaying = true;
+            document.getElementById('play-pause-btn').innerHTML = '<i class="fas fa-pause"></i>';
+            // Implementation for starting video playback
+        }
+
+        function pausePlayback() {
+            isPlaying = false;
+            document.getElementById('play-pause-btn').innerHTML = '<i class="fas fa-play"></i>';
+            // Implementation for pausing video playback
+        }
+
+        function stopPlayback() {
+            isPlaying = false;
+            currentPlaybackTime = 0;
+            document.getElementById('play-pause-btn').innerHTML = '<i class="fas fa-play"></i>';
+            document.getElementById('current-playback-time').textContent = '00:00:00';
+            // Implementation for stopping video playback
+        }
+
+        function seekForward() {
+            currentPlaybackTime += 10; // Skip forward 10 seconds
+            updatePlaybackTime();
+        }
+
+        function seekBackward() {
+            currentPlaybackTime = Math.max(0, currentPlaybackTime - 10); // Skip backward 10 seconds
+            updatePlaybackTime();
+        }
+
+        function changePlaybackSpeed() {
+            const speed = document.getElementById('playback-speed').value;
+            // Implementation for changing playback speed
+            console.log('Changing playback speed to:', speed);
+        }
+
+        function updatePlaybackTime() {
+            const hours = Math.floor(currentPlaybackTime / 3600);
+            const minutes = Math.floor((currentPlaybackTime % 3600) / 60);
+            const seconds = currentPlaybackTime % 60;
+            
+            const timeString = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            document.getElementById('current-playback-time').textContent = timeString;
+        }
+
+        function zoomTimeline(direction) {
+            if (direction === 'in') {
+                timelineZoom = Math.min(timelineZoom * 2, 8);
+            } else {
+                timelineZoom = Math.max(timelineZoom / 2, 0.25);
+            }
+            
+            // Update timeline display based on zoom level
+            updateTimelineZoom();
+        }
+
+        function updateTimelineZoom() {
+            // Implementation for updating timeline zoom
+            console.log('Timeline zoom level:', timelineZoom);
+        }
+
+        function exportRecording() {
+            const format = document.getElementById('export-format').value;
+            const quality = document.getElementById('export-quality').value;
+            
+            // Implementation for exporting recording
+            alert(`Exporting recording in ${format.toUpperCase()} format with ${quality} quality...`);
+        }
+
+        function initializeTimeline() {
+            const timeline = document.getElementById('timeline');
+            
+            // Add click handler for timeline seeking
+            timeline.addEventListener('click', function(e) {
+                const rect = timeline.getBoundingClientRect();
+                const clickX = e.clientX - rect.left;
+                const percentage = (clickX / rect.width) * 100;
+                
+                // Move cursor to clicked position
+                const cursor = document.getElementById('timeline-cursor');
+                cursor.style.left = percentage + '%';
+                
+                // Calculate time based on percentage
+                const totalSeconds = 24 * 60 * 60; // 24 hours in seconds
+                const clickedTime = (percentage / 100) * totalSeconds;
+                currentPlaybackTime = clickedTime;
+                updatePlaybackTime();
+            });
+        }
+    </script>
+}

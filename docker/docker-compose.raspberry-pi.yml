@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  aiit-nvr-rpi:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.raspberry-pi
+    container_name: aiit-nvr-rpi
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+      - "8443:8443"
+      - "554:554"
+    volumes:
+      - nvr_data:/var/lib/aiit-nvr
+      - nvr_logs:/var/log/aiit-nvr
+      - /dev:/dev
+      - /opt/vc:/opt/vc
+    devices:
+      - /dev/video0:/dev/video0
+      - /dev/vchiq:/dev/vchiq
+      - /dev/vcsm:/dev/vcsm
+    privileged: true
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - AIIT_NVR_MAX_CAMERAS=8
+      - AIIT_NVR_LOW_MEMORY=true
+      - AIIT_NVR_IS_RASPBERRY_PI=true
+      - AIIT_NVR_GPU_TYPE=VideoCore
+    networks:
+      - nvr_network
+
+  aiit-nvr-db-rpi:
+    image: mariadb:10.9
+    container_name: aiit-nvr-db-rpi
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD=aiit_nvr_root_2023
+      - MYSQL_DATABASE=nvr_system
+      - MYSQL_USER=nvr_user
+      - MYSQL_PASSWORD=nvr_pass_2023
+    volumes:
+      - nvr_db:/var/lib/mysql
+      - ../scripts/create_database.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - nvr_network
+
+volumes:
+  nvr_data:
+  nvr_logs:
+  nvr_db:
+
+networks:
+  nvr_network:
+    driver: bridge

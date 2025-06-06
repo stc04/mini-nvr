@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  aiit-nvr:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.linux
+    container_name: aiit-nvr
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+      - "8443:8443"
+      - "554:554"
+    volumes:
+      - nvr_data:/var/lib/aiit-nvr
+      - nvr_logs:/var/log/aiit-nvr
+      - /dev:/dev
+    devices:
+      - /dev/video0:/dev/video0
+    privileged: true
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - AIIT_NVR_MAX_CAMERAS=48
+      - AIIT_NVR_ENABLE_GPU_ACCEL=true
+    networks:
+      - nvr_network
+
+  aiit-nvr-db:
+    image: mariadb:10.9
+    container_name: aiit-nvr-db
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD=aiit_nvr_root_2023
+      - MYSQL_DATABASE=nvr_system
+      - MYSQL_USER=nvr_user
+      - MYSQL_PASSWORD=nvr_pass_2023
+    volumes:
+      - nvr_db:/var/lib/mysql
+      - ../scripts/create_database.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - nvr_network
+
+  aiit-nvr-redis:
+    image: redis:7-alpine
+    container_name: aiit-nvr-redis
+    restart: unless-stopped
+    volumes:
+      - nvr_redis:/data
+    networks:
+      - nvr_network
+
+volumes:
+  nvr_data:
+  nvr_logs:
+  nvr_db:
+  nvr_redis:
+
+networks:
+  nvr_network:
+    driver: bridge

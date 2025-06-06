@@ -1,0 +1,105 @@
+<Window x:Class="NVR.WPF.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Professional NVR System" Height="800" Width="1200"
+        WindowState="Maximized">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        
+        <!-- Menu Bar -->
+        <Menu Grid.Row="0">
+            <MenuItem Header="File">
+                <MenuItem Header="Add Camera" Click="AddCamera_Click"/>
+                <MenuItem Header="Settings" Click="Settings_Click"/>
+                <Separator/>
+                <MenuItem Header="Exit" Click="Exit_Click"/>
+            </MenuItem>
+            <MenuItem Header="Recording">
+                <MenuItem Header="Start All" Click="StartAllRecording_Click"/>
+                <MenuItem Header="Stop All" Click="StopAllRecording_Click"/>
+            </MenuItem>
+            <MenuItem Header="View">
+                <MenuItem Header="1x1" Click="SetLayout_Click" Tag="1"/>
+                <MenuItem Header="2x2" Click="SetLayout_Click" Tag="4"/>
+                <MenuItem Header="3x3" Click="SetLayout_Click" Tag="9"/>
+                <MenuItem Header="4x4" Click="SetLayout_Click" Tag="16"/>
+                <MenuItem Header="6x8" Click="SetLayout_Click" Tag="48"/>
+            </MenuItem>
+            <MenuItem Header="Smart Home">
+                <MenuItem Header="Alexa Settings" Click="AlexaSettings_Click"/>
+                <MenuItem Header="Google Home Settings" Click="GoogleHomeSettings_Click"/>
+                <MenuItem Header="Apple HomeKit Settings" Click="AppleHomeKitSettings_Click"/>
+            </MenuItem>
+        </Menu>
+        
+        <!-- Main Content -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="250"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            
+            <!-- Camera List -->
+            <Border Grid.Column="0" BorderBrush="Gray" BorderThickness="1" Margin="5">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    
+                    <TextBlock Grid.Row="0" Text="Cameras" FontWeight="Bold" Margin="5"/>
+                    <ListView Grid.Row="1" x:Name="CameraListView" Margin="5">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <Ellipse Width="10" Height="10" Margin="0,0,5,0">
+                                        <Ellipse.Fill>
+                                            <SolidColorBrush>
+                                                <SolidColorBrush.Color>
+                                                    <MultiBinding Converter="{StaticResource StatusToColorConverter}">
+                                                        <Binding Path="Status"/>
+                                                    </MultiBinding>
+                                                </SolidColorBrush.Color>
+                                            </SolidColorBrush>
+                                        </Ellipse.Fill>
+                                    </Ellipse>
+                                    <TextBlock Text="{Binding Name}"/>
+                                    <TextBlock Text=" - " Foreground="Gray"/>
+                                    <TextBlock Text="{Binding Status}" Foreground="Gray"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </Grid>
+            </Border>
+            
+            <!-- Video Display Grid -->
+            <Border Grid.Column="1" BorderBrush="Gray" BorderThickness="1" Margin="5">
+                <ScrollViewer x:Name="VideoScrollViewer">
+                    <UniformGrid x:Name="VideoGrid" Columns="2" Rows="2"/>
+                </ScrollViewer>
+            </Border>
+        </Grid>
+        
+        <!-- Status Bar -->
+        <StatusBar Grid.Row="2">
+            <StatusBarItem>
+                <TextBlock x:Name="StatusText" Text="Ready"/>
+            </StatusBarItem>
+            <StatusBarItem HorizontalAlignment="Right">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Recording: "/>
+                    <TextBlock x:Name="RecordingCountText" Text="0"/>
+                    <TextBlock Text=" | Connected: "/>
+                    <TextBlock x:Name="ConnectedCountText" Text="0"/>
+                    <TextBlock Text=" | Storage: "/>
+                    <TextBlock x:Name="StorageText" Text="N/A"/>
+                </StackPanel>
+            </StatusBarItem>
+        </StatusBar>
+    </Grid>
+</Window>

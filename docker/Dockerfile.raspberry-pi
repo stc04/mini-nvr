@@ -1,0 +1,63 @@
+# AI-IT Inc NVR - Raspberry Pi Docker Image
+FROM mcr.microsoft.com/dotnet/aspnet:8.0-bullseye-slim-arm32v7 AS base
+
+# Install Raspberry Pi specific dependencies
+RUN apt-get update && apt-get install -y \
+    ffmpeg \
+    v4l-utils \
+    gstreamer1.0-tools \
+    gstreamer1.0-plugins-base \
+    gstreamer1.0-plugins-good \
+    gstreamer1.0-plugins-bad \
+    gstreamer1.0-plugins-ugly \
+    libgstreamer1.0-dev \
+    libgstreamer-plugins-base1.0-dev \
+    libraspberrypi0 \
+    libraspberrypi-dev \
+    libraspberrypi-bin \
+    curl \
+    wget \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+EXPOSE 8080 8443
+
+FROM mcr.microsoft.com/dotnet/sdk:8.0-bullseye-slim-arm32v7 AS build
+WORKDIR /src
+
+# Copy project files
+COPY ["AIIT.NVR.Linux/AIIT.NVR.Linux.csproj", "AIIT.NVR.Linux/"]
+COPY ["AIIT.NVR.Core/AIIT.NVR.Core.csproj", "AIIT.NVR.Core/"]
+COPY ["AIIT.NVR.Web/AIIT.NVR.Web.csproj", "AIIT.NVR.Web/"]
+
+# Restore dependencies
+RUN dotnet restore "AIIT.NVR.Linux/AIIT.NVR.Linux.csproj"
+
+# Copy source code
+COPY . .
+
+# Build application
+WORKDIR "/src/AIIT.NVR.Linux"
+RUN dotnet build "AIIT.NVR.Linux.csproj" -c Release -o /app/build
+
+FROM build AS publish
+RUN dotnet publish "AIIT.NVR.Linux.csproj" -c Release -o /app/publish /p:UseAppHost=false
+
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
+
+# Create directories
+RUN mkdir -p /var/lib/aiit-nvr /var/log/aiit-nvr
+
+# Set Raspberry Pi specific environment variables
+ENV ASPNETCORE_ENVIRONMENT=Production
+ENV ASPNETCORE_URLS=http://+:8080;https://+:8443
+ENV AIIT_NVR_DATA_PATH=/var/lib/aiit-nvr
+ENV AIIT_NVR_LOG_PATH=/var/log/aiit-nvr
+ENV AIIT_NVR_IS_RASPBERRY_PI=true
+ENV AIIT_NVR_LOW_MEMORY=true
+ENV AIIT_NVR_MAX_CAMERAS=8
+ENV AIIT_NVR_GPU_TYPE=VideoCore
+
+ENTRYPOINT ["dotnet", "AIIT.NVR.Linux.dll"]
